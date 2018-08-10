@@ -1,8 +1,10 @@
-<head>{{ filename }}</head>
+<head><h1>{{ file.title }}</h1></head>
 <br>
+    <span>{{ file.created_time }}</span>
+    <br>
+    <span>{{ file.category }}</span>
 <br>
 
 <body>
-    <span>{{ d.created_time }}</span>
-    <p>{{ d.content }}</p>
+    <p>{{ file.content }}</p>
 </body>
