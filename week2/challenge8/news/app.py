@@ -35,17 +35,20 @@ class File(db.Model):
         self.content = content
 
     def add_tag(self,tag_name):
-        self.tag_name = tag_name
         tag = {'name':self.title,'tag':tag_name}
         mgdb.tags.insert_one(tag)
 
     def rem_tag(self,tag_name):
-        pass
+        mgdb.tags.delete_one({'name':self.title,'tag':tag_name})
 
     @property
     def tags(self):
-        return mgdb.tags.find({'name':self.title})
-
+        l = []
+        for tag in mgdb.tags.find({'name':self.title},{'tag':1,'_id':0}):
+            for k,v in tag.items():
+                l.append(v)
+        return set(l)
+            
 
     def __repr__(self):
         return '<File %r>' % self.title
@@ -73,13 +76,13 @@ file2 = File('Hello Python',python,'File Content - Python is cool!')
 db.session.add_all([file1,file2])
 db.session.commit()
 
+mgdb.tags.delete_many({})
 file1.add_tag('tech')
 file1.add_tag('java')
 file1.add_tag('linux')
 file2.add_tag('tech')
 file2.add_tag('python')
 
-print(file1.tags)
 
 @app.route('/')
 def index():
