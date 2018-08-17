@@ -1,8 +1,10 @@
-<head>{{ filename }}</head>
-<br>
-<br>
+{% extends 'base.html' %}
 
-<body>
-    <span>{{ d.created_time }}</span>
-    <p>{{ d.content }}</p>
-</body>
+{% block title %}File:{{ f.title }}{% endblock %}
+
+{% block body %}
+    <h1>{{ f.title }}</h1>
+    <p>{{ f.created_time }}</p>
+    <p>{{ f.content }}</p>
+{% endblock %}
+

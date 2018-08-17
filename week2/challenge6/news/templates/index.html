@@ -1,4 +1,10 @@
-<ul>Artical list
-    <li>{{ d1.title }}</li>
-    <li>{{ d2.title }}</li>
+{% extends 'base.html' %}
+
+{% block title %}Index{% endblock %}
+{% block body %}
+<ul>
+    {% for i in l %}
+    <li>{{ i }}</li>
+    {% endfor %}
 </ul>
+{% endblock %}
