@@ -1,10 +1,9 @@
-<head><h1>{{ file.title }}</h1></head>
-<br>
-    <span>{{ file.created_time }}</span>
-    <br>
-    <span>{{ file.category }}</span>
-<br>
-
-<body>
-    <p>{{ file.content }}</p>
-</body>
+{% extends 'base.html' %}
+{% block title %}{{ f.title }}{% endblock %}
+{% block body %}
+    <p>ID: {{ f.id }}</p>
+    <p>{{ f.title }}</p>
+    <p>{{ f.created_time }}</p>
+    <p>{{ f.content }}</p>
+    <p>{{ f.category.name }}</p>
+{% endblock %}

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask,render_template,request
-import json,os
+from flask import Flask,render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -8,6 +7,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/nttzl'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
@@ -18,7 +18,7 @@ class File(db.Model):
     created_time = db.Column(db.DateTime)
 
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    category = db.relationship('Category',backref=db.backref('files'))
+    category = db.relationship('Category',backref='files')
 
     content = db.Column(db.Text)
     
@@ -56,20 +56,16 @@ db.session.add_all([file1,file2])
 db.session.commit()
 #    app.run(port=3000)
 
+#   print(File.query.all())
+
 @app.route('/')
 def index():
-    return render_template('index.html',file1=file1,file2=file2)
+    return render_template('index.html',l = File.query.all())
 
 @app.route('/files/<file_id>')
 def file(file_id):
-
-    if int(file_id) == 1:
-        result = render_template('file.html',file=file1)
-    elif int(file_id) == 2:
-        result = render_template('file.html',file=file2)
-    else:
-        result = render_template('404.html'),404
-    return result
+    f = File.query.get_or_404(file_id)
+    return render_template('file.html',f = f)
 
 @app.errorhandler(404)
 def not_found(error):
