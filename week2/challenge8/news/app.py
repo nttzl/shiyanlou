@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from flask import Flask,render_template,request
-import json,os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from pymongo import MongoClient
@@ -8,6 +7,7 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/nttzl'
 db = SQLAlchemy(app)
 
@@ -35,8 +35,11 @@ class File(db.Model):
         self.content = content
 
     def add_tag(self,tag_name):
-        tag = {'name':self.title,'tag':tag_name}
-        mgdb.tags.insert_one(tag)
+        if mgdb.tags.find_one({'name':self.title,'tag':tag_name}):
+            pass 
+        else:
+            tag = {'name':self.title,'tag':tag_name}
+            mgdb.tags.insert_one(tag)
 
     def rem_tag(self,tag_name):
         mgdb.tags.delete_one({'name':self.title,'tag':tag_name})
@@ -47,7 +50,7 @@ class File(db.Model):
         for tag in mgdb.tags.find({'name':self.title},{'tag':1,'_id':0}):
             for k,v in tag.items():
                 l.append(v)
-        return set(l)
+        return l
             
 
     def __repr__(self):
@@ -78,6 +81,7 @@ db.session.commit()
 
 mgdb.tags.delete_many({})
 file1.add_tag('tech')
+file1.add_tag('tech')
 file1.add_tag('java')
 file1.add_tag('linux')
 file2.add_tag('tech')
@@ -86,18 +90,12 @@ file2.add_tag('python')
 
 @app.route('/')
 def index():
-    return render_template('index.html',file1=file1,file2=file2)
+    return render_template('index.html',l = File.query.all())
 
 @app.route('/files/<file_id>')
 def file(file_id):
-
-    if int(file_id) == 1:
-        result = render_template('file.html',file=file1)
-    elif int(file_id) == 2:
-        result = render_template('file.html',file=file2)
-    else:
-        result = render_template('404.html'),404
-    return result
+    f = File.query.get_or_404(file_id)
+    return render_template('file.html',f = f) 
 
 @app.errorhandler(404)
 def not_found(error):

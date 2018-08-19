@@ -1,4 +1,11 @@
-<ul>Artical list
-    <li><a href='localhost:3000/files/{{ file1.id }}'>{{ file1.title }}{{  file1.tags  }}</a></li>
-    <li><a href='localhost:3000/files/{{ file2.id }}'>{{ file2.title }}{{  file2.tags  }}</a></li>
-</ul>
+{% extends 'base.html' %}
+{% block title %}Index{% endblock %}
+
+{% block body %}
+    <ul>
+        {% for i in l %}
+        <li><a href = '{{  url_for('file',file_id = i.id) }}'>{{  i.title  }}{{ i.tags  }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
