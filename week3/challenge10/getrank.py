@@ -1,30 +1,36 @@
 # -*- coding: utf-8 -*-
-
 import sys
 from pymongo import MongoClient
-import pdb
 
-client = MongoClient()
-db = client.shiyanlou
-contests = db.contests
-
-dict1 = {}
-db = contests.find()
-for i in db:
-    get = dict1.get(i['user_id'])
-    if get is None:
-        dict1[i['user_id']] = {'score':int(i['score']),'time':int(i['submit_time'])}
-    else:
-        dict1[i['user_id']]['score'] = get.get('score') + int(i['score']) 
-        dict1[i['user_id']]['time'] = get.get('time') + int(i['submit_time']) 
-print(dict1.values())
-s = sorted(dict1.items(), key = lambda x: x[1])
-print(s)
 
 def get_rank(user_id):
-    
+        
+    client = MongoClient()
+    db = client.shiyanlou
+    contests = db.contests
 
-    return score, submit_time
+    dict1 = {}
+    db = contests.find()
+    for i in db:
+        u = i['user_id']
+        s = i['score']
+        t = i['submit_time']
+        if dict1.get(u):
+            dict1[u][0] += int(s)
+            dict1[u][1] += int(t)
+        else:
+            dict1[u] = [s,t]
+
+    l = sorted(dict1.values(), key=lambda x:(-x[0],x[1]))
+
+    for i,j in enumerate(l):
+        for k,v in dict1.items():
+            if v ==j:
+                dict1[k].insert(0,i+1)
+#        dict1[[k for k,v in dict1.items() if v == j][0]].insert(0,i+1)
+
+
+    return tuple(dict1.get(int(user_id)))
 
 if __name__ == '__main__':
     try:
@@ -34,7 +40,6 @@ if __name__ == '__main__':
     except IndexError:
         print('Parameter Error')
         exit()
-    print
     userdata = get_rank(user_id)
     print(userdata)
 #    print(get_rank(2))
