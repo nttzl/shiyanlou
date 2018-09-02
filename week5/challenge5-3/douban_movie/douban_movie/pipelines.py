@@ -11,10 +11,10 @@ import redis
 
 class DoubanMoviePipeline(object):
     def process_item(self, item, spider):
-        item['summary'] = re.sub('\s+',' ',item['summary'])
-        self.redis.lpush('douban_movie:items',json.dumps(dict(item)))
+        item['summary'] = re.sub('\s+', ' ', item['summary'])
+#        self.redis.lpush('douban_movie:items',json.dumps(dict(item)))
 
         return item
 
-    def open_spider(self,spider):
-        self.redis = redis.StrictRedis()
+#    def open_spider(self,spider):
+#        self.redis = redis.StrictRedis()

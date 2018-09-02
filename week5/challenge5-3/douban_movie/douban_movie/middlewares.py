@@ -5,10 +5,10 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy.downloadermiddlewares.useragent import UserAgentMiddlewares as _UserAgentMiddleware
+from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware as _UserAgentMiddleware
 import random
 
-class UserAgentMiddlewart(_UserAgentMiddlewart):
+class UserAgentMiddleware(_UserAgentMiddleware):
 
     user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 "
