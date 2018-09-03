@@ -11,18 +11,14 @@ class AwesomeMovieSpider(scrapy.spiders.CrawlSpider):
     start_urls = ['http://movie.douban.com/subject/3011091']
 
     rules = (
-        Rule(LinkExtractor(allow=r'https://movie.douban.com/subject/.+/?from=subject-page'),callback="parse_start_url",follow=True),
+        Rule(LinkExtractor(allow=r'https://movie.douban.com/subject/.+/?from=subject-page'),callback="parse_movie_item",follow=True),
     )
     def parse_movie_item(self, response):
         item = MovieItem()
         item['url'] = response.url
         item['name'] = response.xpath('//span[@property="v:itemreviewed"]/text()').extract_first()
-        item['summary'] = response.xpath('//span[@class="all hidden"]/text()').extract_first()
+        item['summary'] = response.xpath('//span[@property="v:summary"]/text()').extract_first().strip()
         item['score'] = float(response.css('strong.rating_num::text').extract_first().strip())
-        return item
+        if item['score'] >= 8:
+            yield item
 
-    def parse_start_url(self, response):
-        yield self.parse_movie_item(response)
-
-    def parse_page(self, response):
-        yield self.parse_movie_item(response)
