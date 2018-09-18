@@ -21,9 +21,14 @@ x = temp.resample('A').mean()['1990':'2010']
 x.index = y.index
 x['Total GHG'] = y
 x = x.apply(lambda x:(x-x.min())/(x.max()-x.min()))
-fig = plt.subplot(2,2,1)
-x.plot()
-plt.xlabel('Years')
-plt.ylabel('Values')
-plt.show()
+fig,axes = plt.subplots(2,2)
+ax1 = x.plot(kind='line',figsize=(16,9),ax=axes[0,0],xticks=x.index)
+ax1.set_xlabel('Years')
+ax1.set_ylabel('Values')
+ax2 = x.plot(kind='bar',figsize=(16,9),ax=axes[0,1])
+ax2.set_xlabel('Years')
+ax2.set_ylabel('Values')
 
+z = temp.resample('Q').mean()
+ax3 = z.plot(kind='area',figsize=(16,9),ax=axes[1,0])
+ax4 = z.plot(kind='kde',figsize=(16,9),ax=axes[1,1])
