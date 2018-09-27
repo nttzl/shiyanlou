@@ -3,10 +3,11 @@ from simpledu.config import configs
 from simpledu.models import db, Course
 
 def register_blueprints(app):
-    from .handlers import front, course, admin
+    from .handlers import front, course, admin, users
     app.register_blueprint(front)
     app.register_blueprint(course)
     app.register_blueprint(admin)
+    app.register_blueprint(users)
 
 def create_app(config):
     app = Flask(__name__)
