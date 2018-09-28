@@ -1,13 +1,13 @@
-from flask import Flask, render_template
 from simpledu.config import configs
 from simpledu.models import db, Course
+from flask import Flask
 
 def register_blueprints(app):
-    from .handlers import front, course, admin, users
+    from .handlers import front, course, admin, user
     app.register_blueprint(front)
     app.register_blueprint(course)
     app.register_blueprint(admin)
-    app.register_blueprint(users)
+    app.register_blueprint(user)
 
 def create_app(config):
     app = Flask(__name__)

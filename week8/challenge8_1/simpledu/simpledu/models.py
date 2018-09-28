@@ -11,6 +11,8 @@ class User(db.Model):
     publish_courses = db.relationship('Course')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,onupdate=datetime.utcnow)
+    def __repr__(self):
+        return '<user:{}>'.format(self.username)
 
 class Course(db.Model):
     __tablename__ = 'course'
@@ -21,4 +23,5 @@ class Course(db.Model):
     author = db.relationship('User', uselist=False)
     created_at = db.Column(db.DateTime,default=datetime.utcnow)
     updated_at = db.Column(db.DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
-
+    def __repr__(self):
+        return self.name
