@@ -1,5 +1,7 @@
 class BaseConfig(object):
     SECRET_KEY = 'makesure to set a very secret key'
+    TEMPLATES_AUTO_RELOAD = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True

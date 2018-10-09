@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -9,7 +10,7 @@ class Base(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow,onupdate=datetime.utcnow)
 
-class User(Base):
+class User(Base,UserMixin):
     __tablename__ = 'user'
     
     ROLE_USER = 10
@@ -51,7 +52,28 @@ class Course(Base):
 
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(128),unique=True,index=True,nullable=False)
-    author_id = db.Column(db.Integer,db.ForeignKey('user.id',ondelete='CASCADE'))
+    description = db.Column(db.String(256))
+    image_url = db.Column(db.String(256))
+
+    author_id = db.Column(db.Integer,db.ForeignKey('user.id',ondelete='SET NULL'))
     author = db.relationship('User', uselist=False)
+    chapters = db.relationship('Chapter')
+
     def __repr__(self):
-        return self.name
+        return '<Course:{}>'.format(self.name)
+
+
+class Chapter(Base):
+    __tablename__ = 'chapter'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128),unique=True,index=True)
+    description = db.Column(db.String(256))
+    video_url = db.Column(db.String(256))
+    video_duration = db.Column(db.String(24))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id',ondelete='CASCADE'))
+    course = db.relationship('Course',uselist=False)
+
+    def __repr__(self):
+        return '<Chapter:{}>'.format(self.name)
+
