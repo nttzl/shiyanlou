@@ -2,7 +2,7 @@ import os
 import json
 from random import randint
 from faker import Faker
-from simpledu.models import db,,User,Course,Chapter
+from simpledu.models import db,User,Course,Chapter
 
 fake=Faker()
 
@@ -38,3 +38,17 @@ def iter_chapters():
 
 def run():
     for user in iter_users():
+        db.session.add(user)
+    
+    for course in iter_courses():
+        db.session.add(course)
+
+    for chapter in iter_chapters():
+        db.session.add(chapter)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+

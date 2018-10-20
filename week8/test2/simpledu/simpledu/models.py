@@ -1,3 +1,4 @@
+from flask import url_for
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -61,6 +62,10 @@ class Course(Base):
 
     def __repr__(self):
         return '<Course:{}>'.format(self.name)
+
+    @property
+    def url(self):
+        return url_for('course.detail',course_id=self.id)
 
 
 class Chapter(Base):
